@@ -106,3 +106,29 @@ body {
   color: #007bff; /* Azul bootstrap */
 }
 
+/* Navbar flotante */
+.custom-navbar {
+  background: linear-gradient(135deg, #1a1a1a, #b8860b);
+  padding: 0.5rem 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  z-index: 1100;
+}
+
+.navbar-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: #ffd700 !important;
+}
+
+/* Ajuste para que el contenido no se esconda detrás del navbar */
+.hero {
+  margin-top: 80px; /* espacio debajo del navbar */
+}
+/* Asegurar que el modal esté siempre por encima de la navbar */
+.modal {
+  z-index: 2000 !important;
+}
+
+.modal-backdrop {
+  z-index: 1999 !important;
+}

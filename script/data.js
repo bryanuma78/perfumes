@@ -566,7 +566,7 @@ const descripciones = {
     },
     badeeOud: {
       titulo: "BADEE AL OUD AMETHYST by women 100 ml",
-      img: "imagenes/badee-oud.jpeg",
+      img: "imagenes/badee-oud.jpg",
       precio: 50,
       genero: "mujer",
       descripcion: {
@@ -578,7 +578,7 @@ const descripciones = {
     },
     fraisSupreme: {
       titulo: "Frais et Frais Supreme (exclusive essence) by women",
-      img: "imagenes/frais-supreme.jpeg",
+      img: "imagenes/frais-supreme.jpg",
       precio: 70,
       genero: "mujer",
       descripcion: {
@@ -590,7 +590,7 @@ const descripciones = {
     },
     armafCandee: {
       titulo: "ARMAF ODYSSEY CANDEE to women",
-      img: "imagenes/armaf-candee.jpeg",
+      img: "imagenes/armaf-candee.jpg",
       precio: 60,
       genero: "mujer",
       descripcion: {
@@ -602,7 +602,7 @@ const descripciones = {
     },
     glacierBella: {
       titulo: "GLACIER BELLA WOMEN 100ML by MAISON ALHAMBRA",
-      img: "imagenes/glacier-bella.jpeg",
+      img: "imagenes/glacier-bella.jpg",
       precio: 50,
       genero: "mujer",
       descripcion: {

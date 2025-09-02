@@ -25,7 +25,8 @@ function renderPerfumes() {
             </div>
 
             <button class="btn btn-dark mt-2" onclick="agregarAlCarrito('${key}')">Agregar al carrito</button>
-            <button class="btn btn-outline-warning mt-2" onclick="verDescripcion('${key}')">Ver descripción</button>
+            <button class="btn btn-primary mt-2" onclick="verDescripcion('${key}')">Ver descripción</button>
+
           </div>
         </div>
       </div>

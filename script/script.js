@@ -23,9 +23,12 @@ function renderPerfumes() {
               <span class="input-group-text">Cant.</span>
               <input type="number" min="0" value="0" class="form-control cantidadInput" id="cantidad-${key}">
             </div>
+            <div class="d-flex justify-content-center gap-2 mt-2">
+  <button class="btn btn-grad-info" onclick="verDescripcion('${key}')">Ver descripción</button>
+  <button class="btn btn-grad-dark" onclick="agregarAlCarrito('${key}')">Agregar al carrito</button>
+</div>
 
-            <button class="btn btn-dark mt-2" onclick="agregarAlCarrito('${key}')">Agregar al carrito</button>
-            <button class="btn btn-primary mt-2" onclick="verDescripcion('${key}')">Ver descripción</button>
+
 
           </div>
         </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfumes - Regi & Lis</title>
+  <title>Ropa - Regi & Lis</title>
   <link rel="icon" type="image/png" href="/img/logo.png">
 
   <!-- Google Fonts -->
@@ -30,10 +30,10 @@
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav gap-3">
         <li class="nav-item">
-          <a class="nav-link active" href="/index.html">Perfumes</a>
+          <a class="nav-link" href="/index.html">Perfumes</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/ropa.html">Ropa</a>
+          <a class="nav-link active" href="/ropa.html">Ropa</a>
         </li>
       </ul>
     </div>
@@ -43,8 +43,8 @@
 
 <div class="hero">
   <h1>Regi & Lis</h1>
-  <h2>Essence d’Orient</h2>
-  <p>Donde el estilo y la esencia se encuentran</p>
+  <h2>Colección de Ropa</h2>
+  <p>Moda que define tu estilo</p>
   <hr class="my-4" style="width:60%;margin:auto;border:1px solid #ffd700;">
 </div>
 
@@ -56,9 +56,9 @@
 
 <div class="container-fluid py-5 catalogo">
   <div class="container">
-    <h1 class="text-center">Catálogo de Perfumes</h1>
-    <p class="text-center mb-5">Una selección exclusiva de fragancias únicas</p>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="perfumeContainer"></div>
+    <h1 class="text-center">Catálogo de Ropa</h1>
+    <p class="text-center mb-5">Prendas exclusivas para ti</p>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="ropaContainer"></div>
   </div>
 </div>
 
@@ -72,10 +72,10 @@
       </div>
       <div class="modal-body text-center">
         <img id="descripcionImg" class="img-fluid mb-3">
-        <p><strong>Familia:</strong> <span id="descFamilia"></span></p>
-        <p><strong>Salida:</strong> <span id="descSalida"></span></p>
-        <p><strong>Corazón:</strong> <span id="descCorazon"></span></p>
-        <p><strong>Fondo:</strong> <span id="descFondo"></span></p>
+        <p><strong>Talla:</strong> <span id="descTalla"></span></p>
+        <p><strong>Color:</strong> <span id="descColor"></span></p>
+        <p><strong>Material:</strong> <span id="descMaterial"></span></p>
+        <p><strong>Stock:</strong> <span id="descStock"></span></p>
         <p><strong>Precio:</strong> <span id="descPrecio"></span></p>
         <p><strong>Género:</strong> <span id="descGenero"></span></p>
       </div>
@@ -101,9 +101,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- 👇 SOLO ESTE -->
-<script type="module" src="/js/script.js"></script>
+<script type="module" src="/js/ropa.js"></script>
 
 </body>
 </html>

@@ -1,90 +1,14 @@
-// ===============================
-// 🔥 FIREBASE
-// ===============================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-  getFirestore, 
-  collection, 
-  getDocs 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDerAViXEfvWCFuzDoL-wrhTMxvI-Lu0s0",
-  authDomain: "admin-perfumes.firebaseapp.com",
-  projectId: "admin-perfumes",
-  storageBucket: "admin-perfumes.appspot.com",
-  messagingSenderId: "690143324027",
-  appId: "1:690143324027:web:f4df0b6bf8350ea4087fde"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// ===============================
-// 🛒 ELEMENTOS
-// ===============================
 const perfumeContainer = document.getElementById("perfumeContainer");
 const carritoCount = document.getElementById("carritoCount");
 const carritoLista = document.getElementById("carritoLista");
 
+// Inicializar carrito
 let carrito = [];
-let descripciones = {};
-let filtros = { tipo: "todo", genero: "todo" };
 
-// ===============================
-// 🔄 CARGAR PERFUMES
-// ===============================
-async function cargarPerfumes() {
-  const querySnapshot = await getDocs(collection(db, "productos"));
-  descripciones = {};
-
-  querySnapshot.forEach((doc) => {
-    descripciones[doc.id] = {
-      key: doc.id,
-      ...doc.data(),
-      img: doc.data().imagen
-    };
-  });
-
-  renderPerfumes();
-}
-
-// ===============================
-// 🎨 RENDER
-// ===============================
 function renderPerfumes() {
   perfumeContainer.innerHTML = "";
-
-  let lista = Object.values(descripciones);
-
-  if (filtros.tipo !== "todo") {
-    lista = lista.filter(p => p.tipo === filtros.tipo);
-  }
-
-  if (filtros.genero !== "todo") {
-    lista = lista.filter(p => p.genero === filtros.genero);
-  }
-
-  lista.forEach((perfume) => {
-
-    const precioHTML = perfume.descuento && perfume.descuento > 0
-      ? `
-        <p class="card-text mb-1">
-          <span class="text-muted text-decoration-line-through">
-            $${perfume.precio.toFixed(2)}
-          </span>
-        </p>
-        <p class="card-text text-success fw-bold">
-          $${(perfume.precio - (perfume.precio * perfume.descuento / 100)).toFixed(2)}
-          <span class="badge bg-danger ms-2">-${perfume.descuento}%</span>
-        </p>
-      `
-      : `
-        <p class="card-text text-success fw-bold">
-          $${perfume.precio.toFixed(2)}
-        </p>
-      `;
-
+  for (let key in descripciones) {
+    const perfume = descripciones[key];
     perfumeContainer.innerHTML += `
       <div class="col">
         <div class="card h-100 shadow-sm">
@@ -92,133 +16,174 @@ function renderPerfumes() {
           <div class="card-body text-center">
             <h5 class="card-title">${perfume.titulo}</h5>
             <p class="card-text"><strong>Familia:</strong> ${perfume.descripcion.familia}</p>
-            <p class="card-text text-info"><strong>Género:</strong> ${perfume.genero}</p>
-
-            ${precioHTML}
-
-            <div class="input-group mb-2 justify-content-center" style="max-width:120px;margin:auto;">
+            <p class="card-text text-info"><strong>Género:</strong> ${perfume.genero}</p>  <!-- AÑADIDO -->
+            <p class="card-text text-success"><strong>Precio:</strong> $${perfume.precio.toFixed(2)}</p>
+            
+            <div class="input-group mb-2 justify-content-center" style="max-width: 120px; margin: auto;">
               <span class="input-group-text">Cant.</span>
-              <input type="number" min="1" placeholder="0" class="form-control text-center" id="cantidad-${perfume.key}">
-
+              <input type="number" min="0" value="0" class="form-control cantidadInput" id="cantidad-${key}">
             </div>
-
             <div class="d-flex justify-content-center gap-2 mt-2">
-              <button class="btn btn-grad-info" onclick="verDescripcion('${perfume.key}')">Ver</button>
-              <button class="btn btn-grad-dark" onclick="agregarAlCarrito('${perfume.key}')">Agregar</button>
-            </div>
+  <button class="btn btn-grad-info" onclick="verDescripcion('${key}')">Ver descripción</button>
+  <button class="btn btn-grad-dark" onclick="agregarAlCarrito('${key}')">Agregar al carrito</button>
+</div>
+
+
+
           </div>
         </div>
       </div>
     `;
-  });
+  }
 }
 
-// ===============================
-// 🔎 FILTRO NAVBAR
-// ===============================
-window.filtrarCategoria = function(tipo, genero) {
-  filtros.tipo = tipo;
-  filtros.genero = genero;
-  renderPerfumes();
-};
 
-// ===============================
-// 👁 MODAL
-// ===============================
-window.verDescripcion = function(key) {
+// Mostrar descripción en modal
+function verDescripcion(key) {
   const perfume = descripciones[key];
-
   document.getElementById("descripcionTitulo").textContent = perfume.titulo;
   document.getElementById("descripcionImg").src = perfume.img;
+  document.getElementById("descripcionImg").alt = perfume.titulo;
   document.getElementById("descFamilia").textContent = perfume.descripcion.familia;
   document.getElementById("descSalida").textContent = perfume.descripcion.salida;
   document.getElementById("descCorazon").textContent = perfume.descripcion.corazon;
   document.getElementById("descFondo").textContent = perfume.descripcion.fondo;
   document.getElementById("descPrecio").textContent = `$${perfume.precio.toFixed(2)}`;
-  document.getElementById("descGenero").textContent = perfume.genero;
+  document.getElementById("descGenero").textContent = perfume.genero; // <-- Agregado
 
-  new bootstrap.Modal(document.getElementById("modalDescripcion")).show();
-};
+  const modal = new bootstrap.Modal(document.getElementById("modalDescripcion"));
+  modal.show();
+}
 
-// ===============================
-// ➕ CARRITO
-// ===============================
-window.agregarAlCarrito = function(key) {
-  const cantidad = parseInt(document.getElementById(`cantidad-${key}`).value);
 
-  if (!cantidad || cantidad <= 0) return alert("Cantidad inválida");
+// Agregar al carrito con cantidad
+function agregarAlCarrito(key) {
+  const cantidadInput = document.getElementById(`cantidad-${key}`);
+  const cantidad = parseInt(cantidadInput.value);
 
-  const existe = carrito.find(p => p.key === key);
+  if (!cantidad || cantidad <= 0) {
+    mostrarToast("Agrega una cantidad válida antes de agregar al carrito.");
+    return;
+  }
 
-  if (existe) existe.cantidad += cantidad;
-  else carrito.push({ key, ...descripciones[key], cantidad });
+  // Buscar si el producto ya está en el carrito
+  const indexExistente = carrito.findIndex(item => item.key === key);
+  if (indexExistente !== -1) {
+    carrito[indexExistente].cantidad += cantidad;
+  } else {
+    carrito.push({
+      key: key,
+      ...descripciones[key],
+      cantidad: cantidad
+    });
+  }
 
-  carritoCount.textContent = carrito.reduce((a,b)=>a+b.cantidad,0);
+  carritoCount.textContent = carrito.reduce((acc, item) => acc + item.cantidad, 0);
   renderCarrito();
-};
+  cantidadInput.value = 0; // Reiniciar input
+}
 
+// Renderizar carrito
 function renderCarrito() {
-  if (!carrito.length) {
+  if (carrito.length === 0) {
     carritoLista.innerHTML = `<p class="text-muted">Tu carrito está vacío.</p>`;
     return;
   }
 
-  let total = 0;
+  let totalProductos = 0;
+  let totalPrecio = 0;
 
   carritoLista.innerHTML = `
     <ul class="list-group mb-3">
-      ${carrito.map((p,i)=>{
-        const precioFinal = p.descuento && p.descuento > 0
-          ? p.precio - (p.precio * p.descuento / 100)
-          : p.precio;
-
-        total += precioFinal * p.cantidad;
-
+      ${carrito.map((item, i) => {
+        totalProductos += item.cantidad;
+        totalPrecio += item.precio * item.cantidad;
         return `
-          <li class="list-group-item d-flex justify-content-between">
-            <div>
-              <strong>${p.titulo}</strong><br>
-              $${precioFinal.toFixed(2)} x ${p.cantidad}
-            </div>
-            <button class="btn btn-danger btn-sm" onclick="eliminarDelCarrito(${i})">🗑</button>
-          </li>
-        `;
-      }).join("")}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <strong>${item.titulo}</strong><br>
+            <small class="text-muted">${item.descripcion.familia}</small><br>
+            <small class="text-success">Precio: $${item.precio.toFixed(2)} x ${item.cantidad} = $${(item.precio * item.cantidad).toFixed(2)}</small>
+          </div>
+          <button class="btn btn-sm btn-danger" onclick="eliminarDelCarrito(${i})">🗑</button>
+        </li>
+      `}).join("")}
     </ul>
-    <strong>Total: $${total.toFixed(2)}</strong>
+    <p><strong>Total de productos:</strong> ${totalProductos}</p>
+    <p><strong>Total a pagar:</strong> $${totalPrecio.toFixed(2)}</p>
   `;
 }
 
-window.eliminarDelCarrito = function(i){
-  carrito.splice(i,1);
-  carritoCount.textContent = carrito.reduce((a,b)=>a+b.cantidad,0);
+// Eliminar del carrito
+function eliminarDelCarrito(index) {
+  carrito.splice(index, 1);
+  carritoCount.textContent = carrito.reduce((acc, item) => acc + item.cantidad, 0);
   renderCarrito();
-};
+}
 
-// ===============================
-// 📲 WHATSAPP
-// ===============================
-window.finalizarCompra = function() {
-  if (!carrito.length) return alert("Carrito vacío");
+// -----------------------------
+// FUNCION FINALIZAR COMPRA (WhatsApp)
+// -----------------------------
+function finalizarCompra() {
+  if (carrito.length === 0) {
+    mostrarToast("El carrito está vacío.");
+    return;
+  }
 
-  let msg = "🛍️ Pedido:\n\n";
-  let total = 0;
+  let mensaje = "🛍️ *Nuevo Pedido:*\n\n";
+  let totalProductos = 0;
+  let totalPrecio = 0;
 
-  carrito.forEach(p=>{
-    const precioFinal = p.descuento && p.descuento > 0
-      ? p.precio - (p.precio * p.descuento / 100)
-      : p.precio;
-
-    msg += `${p.titulo} x${p.cantidad} - $${(precioFinal*p.cantidad).toFixed(2)}\n`;
-    total += precioFinal*p.cantidad;
+  carrito.forEach(item => {
+    mensaje += `${item.titulo} x${item.cantidad} - $${(item.precio * item.cantidad).toFixed(2)}\n`;
+    totalProductos += item.cantidad;
+    totalPrecio += item.precio * item.cantidad;
   });
 
-  msg += `\nTotal: $${total.toFixed(2)}`;
+  mensaje += `\n📦 Total de productos: ${totalProductos}`;
+  mensaje += `\n💰 Total a pagar: $${totalPrecio.toFixed(2)}`;
+  mensaje += "\n✅ Por favor confirme el pedido.";
 
-  window.open(`https://wa.me/593992570322?text=${encodeURIComponent(msg)}`);
-};
+  let numeroVendedora = "593992570322";
+  let url = `https://wa.me/${numeroVendedora}?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, "_blank");
+}
 
-// ===============================
-// 🚀 INIT
-// ===============================
-cargarPerfumes();
+// -----------------------------
+// TOAST
+// -----------------------------
+function mostrarToast(mensaje) {
+  let toastContainer = document.getElementById("toastContainer");
+  if (!toastContainer) {
+    toastContainer = document.createElement("div");
+    toastContainer.id = "toastContainer";
+    toastContainer.className = "position-fixed bottom-0 end-0 p-3";
+    toastContainer.style.zIndex = 1060;
+    document.body.appendChild(toastContainer);
+  }
+
+  const toastEl = document.createElement("div");
+  toastEl.className = "toast align-items-center text-bg-warning border-0";
+  toastEl.role = "alert";
+  toastEl.ariaLive = "assertive";
+  toastEl.ariaAtomic = "true";
+  toastEl.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">
+        ${mensaje}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  `;
+
+  toastContainer.appendChild(toastEl);
+  const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+  toast.show();
+
+  toastEl.addEventListener("hidden.bs.toast", () => {
+    toastEl.remove();
+  });
+}
+
+// Inicializar
+renderPerfumes();
